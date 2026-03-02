@@ -499,6 +499,37 @@
                 i++;
             }
 
+            // normalizza le ricette: assicura che ogni ricetta abbia ingredienti e istruzioni
+            recipes.forEach(r => {
+                // nome base derivato dal titolo (es: 'Ciambellone' da 'Ciambellone classico')
+                let baseMatch = null;
+                for (const b of bases) {
+                    if (r.title && r.title.toLowerCase().includes(b.name.toLowerCase())) {
+                        baseMatch = b;
+                        break;
+                    }
+                }
+
+                if (!r.ingredients || !Array.isArray(r.ingredients) || r.ingredients.length === 0) {
+                    if (baseMatch && baseIngredients[baseMatch.name]) {
+                        r.ingredients = baseIngredients[baseMatch.name].slice();
+                    } else {
+                        r.ingredients = ['200g farina', '100g zucchero', '2 uova'];
+                    }
+                }
+
+                if (!r.instructions || !Array.isArray(r.instructions) || r.instructions.length === 0) {
+                    const baseNameForInstr = baseMatch ? baseMatch.name : (r.title ? r.title.split(' ')[0] : '');
+                    try {
+                        r.instructions = generateInstructions(baseNameForInstr, '', r.ingredients);
+                    } catch (e) {
+                        r.instructions = ['Preriscalda il forno alla temperatura indicata.', 'Prepara gli ingredienti e mescola come da ricetta base.', 'Cuoci e controlla con stecchino.'];
+                    }
+                }
+
+                if (!r.keyword) r.keyword = 'dolce';
+            });
+
             return recipes;
         })();
 

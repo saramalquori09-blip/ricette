@@ -148,53 +148,7 @@
             border: 1px solid #eee;
         }
 
-        /* chat styles */
-        .chat-widget {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-            width: 320px;
-            max-height: 450px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            border-radius: 12px;
-            overflow: hidden;
-            font-family: inherit;
-            z-index: 9999;
-        }
-        .chat-header {
-            background: linear-gradient(90deg,#667eea,#764ba2);
-            color: white;
-            padding: 12px;
-            font-weight: 600;
-        }
-        .chat-body {
-            background: white;
-            height: 320px;
-            padding: 12px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .chat-input {
-            display: flex;
-            gap: 8px;
-            padding: 10px;
-            background: #f6f7fb;
-        }
-        .chat-input input {
-            flex: 1;
-            padding: 8px 10px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-        }
-        .chat-message {
-            max-width: 85%;
-            padding: 8px 10px;
-            border-radius: 10px;
-        }
-        .chat-message.user { align-self: flex-end; background: #667eea; color: white; }
-        .chat-message.bot { align-self: flex-start; background: #eef2ff; color: #222; }
+
 
         .section-title {
             color: #764ba2;
@@ -343,18 +297,6 @@
             <span onclick="searchByKeyword('muffin')">Muffin</span>
             <span onclick="searchByKeyword('biscotti')">Biscotti</span>
             <span onclick="randomDolce()">🎲 Dolce Casuale</span>
-        </div>
-    </div>
-
-    <!-- chat widget markup -->
-    <div class="chat-widget" id="chatWidget">
-        <div class="chat-header">Prenota assistenza</div>
-        <div class="chat-body" id="chatBody">
-            <div class="chat-message bot">Ciao! Posso aiutarti con prenotazioni o con la preparazione delle ricette.</div>
-        </div>
-        <div class="chat-input">
-            <input type="text" id="chatInput" placeholder="Scrivi un messaggio..." />
-            <button onclick="sendChat()">Invia</button>
         </div>
     </div>
 
@@ -549,69 +491,7 @@
         // Mostra una ricetta dolce/colazione casuale al caricamento
         window.addEventListener('load', randomDolce);
 
-        // chat logic
-        function sendChat() {
-            const input = document.getElementById('chatInput');
-            const text = input.value.trim();
-            if (!text) return;
-            appendChat('user', text);
-            input.value = '';
-            setTimeout(() => respondBot(text), 500);
-        }
 
-        // allow enter key in chat
-        document.getElementById('chatInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                sendChat();
-            }
-        });
-
-        function appendChat(role, message) {
-            const body = document.getElementById('chatBody');
-            const div = document.createElement('div');
-            div.className = 'chat-message ' + role;
-            div.textContent = message;
-            body.appendChild(div);
-            body.scrollTop = body.scrollHeight;
-        }
-
-        function respondBot(msg) {
-            const lower = msg.toLowerCase();
-            let reply = '';
-
-            // context-aware based on currentRecipe
-            if (currentRecipe) {
-                if (lower.includes('ingred')) {
-                    reply = 'Gli ingredienti sono: ' + currentRecipe.ingredients.join(', ');
-                } else if (lower.match(/passo\s*\d+/)) {
-                    const num = parseInt(lower.match(/passo\s*(\d+)/)[1],10);
-                    if (num >= 1 && num <= currentRecipe.instructions.length) {
-                        reply = `Passo ${num}: ${currentRecipe.instructions[num-1]}`;
-                    } else {
-                        reply = `La ricetta ha ${currentRecipe.instructions.length} passi.`;
-                    }
-                } else if (lower.includes('come') || lower.includes('prepar') || lower.includes('proced')) {
-                    reply = 'Ecco come fare: ' + currentRecipe.instructions.join(' | ');
-                }
-            }
-
-            // fallbacks general
-            if (!reply) {
-                if (lower.match(/prenot|voglio|desidero/)) {
-                    reply = 'Perfetto! Indica quale dolce vuoi prenotare e per quando.';
-                } else if (lower.includes('data') || lower.includes('orario')) {
-                    reply = 'Ho capito, dammi la data e l\'ora che preferisci per la prenotazione.';
-                } else if (lower.includes('ciao') || lower.includes('salve')) {
-                    reply = 'Ciao! Dimmi pure come posso aiutarti con la tua prenotazione o la preparazione.';
-                } else if (lower.includes('grazie')) {
-                    reply = 'Prego, felice di aiutarti!';
-                } else {
-                    reply = 'Dimmi se desideri vedere gli ingredienti o un passo della ricetta.';
-                }
-            }
-
-            appendChat('bot', reply);
-        }
     </script>
 </body>
 </html>

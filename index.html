@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ricette Casuali - Ispirazione Culinaria</title>
+    <title>Dolci da Forno - Ricette Casuali</title>
     <style>
         * {
             margin: 0;
@@ -139,6 +139,63 @@
             margin-bottom: 20px;
         }
 
+        .recipe-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #eee;
+        }
+
+        /* chat styles */
+        .chat-widget {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            width: 320px;
+            max-height: 450px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            font-family: inherit;
+            z-index: 9999;
+        }
+        .chat-header {
+            background: linear-gradient(90deg,#667eea,#764ba2);
+            color: white;
+            padding: 12px;
+            font-weight: 600;
+        }
+        .chat-body {
+            background: white;
+            height: 320px;
+            padding: 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .chat-input {
+            display: flex;
+            gap: 8px;
+            padding: 10px;
+            background: #f6f7fb;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .chat-message {
+            max-width: 85%;
+            padding: 8px 10px;
+            border-radius: 10px;
+        }
+        .chat-message.user { align-self: flex-end; background: #667eea; color: white; }
+        .chat-message.bot { align-self: flex-start; background: #eef2ff; color: #222; }
+
         .section-title {
             color: #764ba2;
             font-size: 1.1em;
@@ -265,10 +322,10 @@
 <body>
     <div class="container">
         <h1>🍳 Ricette Casuali</h1>
-        <p class="subtitle">Scopri una nuova ricetta con una sola parola!</p>
+        <p class="subtitle">Dolci classici da forno, veloci e facili — lasciati ispirare!</p>
 
         <div class="search-box">
-            <input type="text" id="keywordInput" placeholder="Cerca qualsiasi ricetta (es: dolce, colazione, veloce, pasta)..." />
+            <input type="text" id="keywordInput" placeholder="Cerca dolci da forno (es: ciambellone, crostata, muffin)..." />
             <button onclick="searchRecipe()">Cerca</button>
             <button class="random-button" onclick="randomAll()">🎲 Casuale</button>
             <button class="random-button" onclick="randomDolce()">🎲 Dolce Casuale</button>
@@ -289,6 +346,18 @@
         </div>
     </div>
 
+    <!-- chat widget markup -->
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-header">Prenota assistenza</div>
+        <div class="chat-body" id="chatBody">
+            <div class="chat-message bot">Ciao! Posso aiutarti con prenotazioni o con la preparazione delle ricette.</div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="chatInput" placeholder="Scrivi un messaggio..." />
+            <button onclick="sendChat()">Invia</button>
+        </div>
+    </div>
+
     <script>
         const recipes = (function() {
             // basi di dolci da forno classici e veloci
@@ -305,7 +374,7 @@
                 { name: 'Sbrisolona', bakeTime: '25-30 min', servings: '8 pezzi' }
             ];
 
-            const variants = ['classico','al cioccolato','al limone','alla marmellata','alla ricotta','alle mele','alla banana','alle fragole','alla cannella','alla nocciola','al pistacchio','con gocce di cioccolato','al cocco','allo yogurt','al caramello','senza burro','senza uova','vegano','senza glutine','con miele'];
+            const variants = ['classico','al cioccolato','al limone','alla marmellata','alla ricotta','alle mele','alla banana','alle fragole','alla cannella','alla nocciola','con gocce di cioccolato','al cocco','allo yogurt','senza burro','senza uova','vegano','senza glutine','con miele'];
 
             const baseIngredients = {
                 'Ciambellone': ['300g farina', '180g zucchero', '3 uova', '120ml olio', '200ml latte', '1 bustina lievito', 'Scorza di limone'],
@@ -370,6 +439,14 @@
             return recipes;
         })();
 
+        let currentRecipe = null;
+
+        function getImageFor(recipe) {
+            const text = encodeURIComponent(recipe.title);
+            const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400'><rect width='600' height='400' fill='%23ddd'/><text x='50%' y='50%' font-size='24' text-anchor='middle' fill='%23667eea' dy='.3em'>${text}</text></svg>`;
+            return `data:image/svg+xml;charset=UTF-8,${svg}`;
+        }
+
         function displayRecipe(recipe) {
             const container = document.getElementById('recipeContainer');
             if (!recipe) {
@@ -379,11 +456,17 @@
                 return;
             }
 
+            currentRecipe = recipe;
             document.getElementById('errorMessage').classList.remove('active');
+
+            const imgUrl = recipe.image || getImageFor(recipe);
 
             const html = `
                 <div class="recipe-keyword">${recipe.keyword.toUpperCase()}</div>
                 <h2 class="recipe-title">${recipe.title}</h2>
+                <a href="${imgUrl}" target="_blank" rel="noopener">
+                    <img class="recipe-image" src="${imgUrl}" alt="${recipe.title}" />
+                </a>
                 
                 <div class="time-servings">
                     <div>
@@ -428,7 +511,7 @@
 
             const matching = pool.filter(r => r.title.toLowerCase().includes(keyword) || r.ingredients.join(' ').toLowerCase().includes(keyword) || r.keyword.includes(keyword));
             if (matching.length === 0) {
-                document.getElementById('errorMessage').textContent = `Nessuna ricetta trovata con la parola "${keyword}". Prova: dolce, colazione, veloce, pasta, pizza`;
+                document.getElementById('errorMessage').textContent = `Nessuna ricetta trovata con la parola "${keyword}". Prova: ciambellone, crostata, plumcake, muffin`;
                 document.getElementById('errorMessage').classList.add('active');
                 document.getElementById('recipeContainer').classList.remove('active');
                 return;
@@ -465,6 +548,70 @@
 
         // Mostra una ricetta dolce/colazione casuale al caricamento
         window.addEventListener('load', randomDolce);
+
+        // chat logic
+        function sendChat() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+            appendChat('user', text);
+            input.value = '';
+            setTimeout(() => respondBot(text), 500);
+        }
+
+        // allow enter key in chat
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendChat();
+            }
+        });
+
+        function appendChat(role, message) {
+            const body = document.getElementById('chatBody');
+            const div = document.createElement('div');
+            div.className = 'chat-message ' + role;
+            div.textContent = message;
+            body.appendChild(div);
+            body.scrollTop = body.scrollHeight;
+        }
+
+        function respondBot(msg) {
+            const lower = msg.toLowerCase();
+            let reply = '';
+
+            // context-aware based on currentRecipe
+            if (currentRecipe) {
+                if (lower.includes('ingred')) {
+                    reply = 'Gli ingredienti sono: ' + currentRecipe.ingredients.join(', ');
+                } else if (lower.match(/passo\s*\d+/)) {
+                    const num = parseInt(lower.match(/passo\s*(\d+)/)[1],10);
+                    if (num >= 1 && num <= currentRecipe.instructions.length) {
+                        reply = `Passo ${num}: ${currentRecipe.instructions[num-1]}`;
+                    } else {
+                        reply = `La ricetta ha ${currentRecipe.instructions.length} passi.`;
+                    }
+                } else if (lower.includes('come') || lower.includes('prepar') || lower.includes('proced')) {
+                    reply = 'Ecco come fare: ' + currentRecipe.instructions.join(' | ');
+                }
+            }
+
+            // fallbacks general
+            if (!reply) {
+                if (lower.match(/prenot|voglio|desidero/)) {
+                    reply = 'Perfetto! Indica quale dolce vuoi prenotare e per quando.';
+                } else if (lower.includes('data') || lower.includes('orario')) {
+                    reply = 'Ho capito, dammi la data e l\'ora che preferisci per la prenotazione.';
+                } else if (lower.includes('ciao') || lower.includes('salve')) {
+                    reply = 'Ciao! Dimmi pure come posso aiutarti con la tua prenotazione o la preparazione.';
+                } else if (lower.includes('grazie')) {
+                    reply = 'Prego, felice di aiutarti!';
+                } else {
+                    reply = 'Dimmi se desideri vedere gli ingredienti o un passo della ricetta.';
+                }
+            }
+
+            appendChat('bot', reply);
+        }
     </script>
 </body>
 </html>

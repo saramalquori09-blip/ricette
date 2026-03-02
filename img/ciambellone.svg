@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#fff7ee"/>
+  <g transform="translate(200,160)">
+    <ellipse cx="400" cy="240" rx="360" ry="180" fill="#ffd89b"/>
+    <ellipse cx="400" cy="240" rx="260" ry="120" fill="#fff"/>
+  </g>
+  <text x="50%" y="30%" text-anchor="middle" font-size="60" fill="#b35400" font-family="Segoe UI, Arial">🍋 Ciambellone Classico</text>
+  <text x="50%" y="70%" text-anchor="middle" font-size="28" fill="#7a4b1a" font-family="Segoe UI, Arial">Soffice, profumato al limone — ideale per la colazione</text>
+</svg>

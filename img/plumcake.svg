@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#f6fbff"/>
+  <g transform="translate(200,160)">
+    <rect x="200" y="160" width="560" height="220" rx="40" fill="#ffd6a5"/>
+    <rect x="260" y="200" width="440" height="140" rx="20" fill="#fff"/>
+  </g>
+  <text x="50%" y="30%" text-anchor="middle" font-size="56" fill="#b8571a" font-family="Segoe UI, Arial">🍰 Plumcake allo Yogurt</text>
+  <text x="50%" y="70%" text-anchor="middle" font-size="26" fill="#8a4b2a" font-family="Segoe UI, Arial">Morbido e versatile, perfetto per merenda e colazione</text>
+</svg>

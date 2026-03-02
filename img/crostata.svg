@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#fffaf6"/>
+  <g transform="translate(200,140)">
+    <circle cx="400" cy="260" r="220" fill="#f4c6a0"/>
+    <circle cx="400" cy="260" r="180" fill="#e07a5f"/>
+  </g>
+  <text x="50%" y="30%" text-anchor="middle" font-size="56" fill="#8b3a2b" font-family="Segoe UI, Arial">🍓 Crostata alla Marmellata</text>
+  <text x="50%" y="70%" text-anchor="middle" font-size="26" fill="#5b3a32" font-family="Segoe UI, Arial">Pasta frolla friabile con cuore dolce di marmellata</text>
+</svg>

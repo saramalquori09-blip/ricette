@@ -281,7 +281,6 @@
         <div class="search-box">
             <input type="text" id="keywordInput" placeholder="Cerca dolci da forno (es: ciambellone, crostata, muffin)..." />
             <button onclick="searchRecipe()">Cerca</button>
-            <button class="random-button" onclick="randomAll()">🎲 Casuale</button>
             <button class="random-button" onclick="randomDolce()">🎲 Dolce Casuale</button>
         </div>
 
@@ -316,7 +315,8 @@
                 { name: 'Sbrisolona', bakeTime: '25-30 min', servings: '8 pezzi' }
             ];
 
-            const variants = ['classico','al cioccolato','al limone','alla marmellata','alla ricotta','alle mele','alla banana','alle fragole','alla nocciola','con gocce di cioccolato','al cocco','allo yogurt'];
+            // rimosse varianti con cocco o esotiche
+            const variants = ['classico','al cioccolato','al limone','alla marmellata','alla ricotta','alle mele','alla banana','alle fragole','alla nocciola','con gocce di cioccolato','allo yogurt'];
 
             const baseIngredients = {
                 'Ciambellone': ['300g farina', '180g zucchero', '3 uova', '120ml olio', '200ml latte', '1 bustina lievito', 'Scorza di limone'],
@@ -336,82 +336,104 @@
             // Genera istruzioni dettagliate in base al tipo di dolce
             function generateInstructions(baseName, variant, ingredientsList) {
                 const steps = [];
+                // consigli generali utilizzabili in fondo
+                const generalTips = [
+                    'Consiglio: pesa sempre gli ingredienti per risultati costanti.',
+                    'Usa ingredienti a temperatura ambiente (uova, latte) per impasti più omogenei.',
+                    'Non aprire il forno nei primi 2/3 della cottura per evitare che il dolce si afflosci.',
+                    'Controlla la cottura con uno stecchino: deve uscire con poche briciole umide, non completamente bagnato.'
+                ];
+
                 if (baseName === 'Ciambellone') {
-                    steps.push('Preriscalda il forno a 180°C. Imburra e infarina uno stampo a ciambella da 22-24 cm.');
-                    steps.push('Setaccia farina e lievito in una ciotola e tieni da parte.');
-                    steps.push('In un\'altra ciotola monta le uova con lo zucchero fino a ottenere un composto chiaro e spumoso.');
-                    steps.push('Aggiungi olio a filo e il latte, alternando e mescolando delicatamente.');
-                    steps.push('Incorpora la scorza di limone e la farina setacciata, mescolando dal basso verso l\'alto.');
-                    steps.push('Versa nello stampo, livella e cuoci 30-40 minuti; prova con uno stecchino.');
-                    steps.push('Sforna, lascia intiepidire 10 minuti nello stampo e poi raffredda su una gratella.');
+                    steps.push('Prepara: imburra e infarina uno stampo a ciambella da 22-24 cm o usa staccante spray.');
+                    steps.push('Ingredienti: porta a temperatura ambiente 3 uova e 200 ml di latte; grattugia la scorza di 1 limone.');
+                    steps.push('Montaggio: monta le uova con 180 g di zucchero per almeno 8-10 minuti fino a ottenere un nastro chiaro e arioso.');
+                    steps.push('Incorporazione grassi: aggiungi 120 ml di olio a filo mentre monti a bassa velocità, poi il latte e la scorza.');
+                    steps.push('Setaccia insieme 300 g di farina e 1 bustina di lievito; incorpora in 2-3 riprese mescolando dal basso verso l\'alto per non smontare il composto.');
+                    steps.push('Versa nello stampo, livella con una spatola e sbatti leggermente lo stampo sul piano per eliminare bolle d\'aria.');
+                    steps.push('Cottura: cuoci in forno statico a 180°C (ventilato 160-170°C) per 30-40 minuti; controlla dopo 30 minuti con stecchino.');
+                    steps.push('Riposo: lascia raffreddare 10 min nello stampo, poi sforma su una gratella; attendi che sia completamente tiepido prima di tagliare.');
+                    steps.push('Conservazione: mantenere coperto a temperatura ambiente per 2-3 giorni o congelare a fette per 1 mese.');
+                    steps.push(...generalTips);
                     return steps;
                 }
 
                 if (baseName === 'Crostata') {
-                    steps.push('Prepara la pasta frolla mescolando farina e burro freddo fino a ottenere un composto sabbioso.');
-                    steps.push('Aggiungi zucchero e uova e impasta rapidamente fino a ottenere una palla liscia.');
-                    steps.push('Riposa in frigorifero 30 minuti avvolta nella pellicola.');
-                    steps.push('Stendi la frolla e fodera una tortiera; bucherella il fondo e aggiungi la marmellata.');
-                    steps.push('Forma la griglia superiore con strisce di frolla e cuoci a 180°C per 25-30 minuti.');
-                    steps.push('Fai raffreddare completamente prima di servire.');
+                    steps.push('Prepara la pasta frolla: lavora 300 g farina con 150 g burro freddo fino a sabbiare.');
+                    steps.push('Aggiungi 100 g zucchero e 2 tuorli; impasta velocemente fino a ottenere una palla liscia.');
+                    steps.push('Riposo: avvolgi nella pellicola e lascia in frigo 30-60 minuti per rilassare il glutine.');
+                    steps.push('Stesura: stendi i 2/3 della frolla su un piano leggermente infarinato e fodera una tortiera da 24 cm.');
+                    steps.push('Ripieno: usa 250-300 g di marmellata densa; non eccedere per evitare che coli in cottura.');
+                    steps.push('Griglia: forma strisce regolari per la copertura e sigilla i bordi con una leggera pressione.');
+                    steps.push('Cottura: forno a 180°C per 25-30 minuti fino a doratura uniforme; se la superficie scurisce troppo, copri con carta alluminio.');
+                    steps.push('Raffreddamento: lascia raffreddare completamente prima di tagliare per ottenere fette pulite.');
+                    steps.push('Conservazione: si mantiene 3-4 giorni a temperatura ambiente, meglio se coperta.');
+                    steps.push(...generalTips);
                     return steps;
                 }
 
                 if (baseName === 'Plumcake' || baseName === 'Torta allo Yogurt') {
-                    steps.push('Preriscalda il forno a 180°C e prepara uno stampo da plumcake o tortiera.');
-                    steps.push('In una ciotola unisci gli ingredienti umidi (uova, yogurt/olio, latte) e mescola.');
-                    steps.push('In un\'altra ciotola setaccia le farine con il lievito e lo zucchero.');
-                    steps.push('Unisci i secchi ai liquidi in più riprese, mescolando il meno possibile.');
-                    steps.push('Aggiungi eventuali pezzetti di frutta o scaglie di cioccolato.');
-                    steps.push('Versa nello stampo e cuoci 35-45 minuti; controlla la cottura con uno stecchino.');
-                    steps.push('Raffredda su una gratella prima di servire.');
+                    steps.push('Preparazione: preriscalda il forno a 180°C e imburra/infarina uno stampo da plumcake (o usa carta forno).');
+                    steps.push('Ingredienti: porta a temperatura ambiente 3 uova, 150-200 g di zucchero e 150 ml di olio o 1 vasetto di yogurt.');
+                    steps.push('Mescola gli umidi: yogurt, olio e uova fino a omogeneizzare.');
+                    steps.push('Setaccia farina e lievito e incorpora gradualmente agli umidi con movimenti lenti.');
+                    steps.push('Aggiunte: unisci frutta fresca a pezzetti o gocce di cioccolato infarinate per evitare che affondino.');
+                    steps.push('Cottura: versa nello stampo e cuoci 35-45 minuti; se la superficie scurisce troppo, abbassa il forno a 170°C e copri con alluminio.');
+                    steps.push('Controllo: inserisci uno stecchino al centro: deve uscire con poche briciole umide.');
+                    steps.push('Raffredda su gratella; per fette regolari, aspetta che sia quasi freddo.');
+                    steps.push('Conservazione: mantiene morbidezza per 2-3 giorni in contenitore ermetico.');
+                    steps.push(...generalTips);
                     return steps;
                 }
 
                 if (baseName === 'Muffin') {
-                    steps.push('Preriscalda il forno a 200°C e prepara uno stampo per muffin con pirottini.');
-                    steps.push('Setaccia farina, zucchero e lievito; aggiungi un pizzico di sale.');
-                    steps.push('In un\'altra ciotola miscela uovo, latte e olio.');
-                    steps.push('Unisci gli ingredienti umidi ai secchi in poche mescolate (l\'impasto deve rimanere grumoso).');
-                    steps.push('Riempi i pirottini per 2/3 e cuoci 18-22 minuti fino a doratura.');
-                    steps.push('Lascia intiepidire e servi.');
+                    steps.push('Prepara: preriscalda il forno a 200°C e prepara pirottini nello stampo da muffin.');
+                    steps.push('Ingredienti secchi: setaccia 200 g farina, 1 bustina di lievito e 120 g zucchero con un pizzico di sale.');
+                    steps.push('Ingredienti umidi: sbatti 1 uovo con 120 ml latte e 80 ml olio o 100 g burro fuso.');
+                    steps.push('Unisci umidi e secchi solo il necessario: l\'impasto deve rimanere leggermente grumoso per muffin soffici.');
+                    steps.push('Riempi i pirottini per 2/3, aggiungi topping se desideri (zucchero di canna, crumble).');
+                    steps.push('Cottura: 18-22 minuti, controlla la doratura e prova stecchino.');
+                    steps.push('Raffreddamento: lascia 5 minuti nello stampo, poi trasferisci su gratella.');
+                    steps.push(...generalTips);
                     return steps;
                 }
 
                 if (baseName === 'Biscotti') {
-                    steps.push('Prepara l\'impasto mescolando burro morbido e zucchero fino a crema.');
-                    steps.push('Aggiungi l\'uovo e vaniglia, poi incorpora la farina fino a ottenere un impasto compatto.');
-                    steps.push('Stendi l\'impasto e ritaglia i biscotti con formine; disponili su una teglia.');
-                    steps.push('Cuoci a 170°C per 10-15 minuti fino ai bordi dorati.');
-                    steps.push('Raffredda su una gratella; si induriscono leggermente raffreddandosi.');
+                    steps.push('Prepara impasto: lavora 120 g burro morbido con 120 g zucchero fino a crema.');
+                    steps.push('Aggiungi 1 uovo e aromi, poi incorpora 300 g farina fino ad ottenere impasto compatto.');
+                    steps.push('Riposa in frigo 30 minuti, poi stendi e ritaglia con formine.');
+                    steps.push('Cuoci in forno a 170°C per 10-15 minuti fino a leggera doratura ai bordi.');
+                    steps.push('Raffredda e conserva in scatola metallica per mantenerli croccanti.');
+                    steps.push(...generalTips);
                     return steps;
                 }
 
                 if (baseName === 'Brownies') {
-                    steps.push('Preriscalda il forno a 170°C e fodera una teglia quadrata con carta forno.');
-                    steps.push('Sciogli cioccolato e burro a bagnomaria e lascia intiepidire.');
-                    steps.push('Mescola uova e zucchero fino a diventare lucidi, poi incorpora il cioccolato sciolto.');
-                    steps.push('Aggiungi la farina setacciata con movimenti delicati.');
-                    steps.push('Versa nella teglia e cuoci 20-25 minuti: l\'interno deve rimanere umido.');
-                    steps.push('Raffredda completamente prima di tagliare a quadrotti.');
+                    steps.push('Prepara teglia quadrata e fodera con carta forno.');
+                    steps.push('Sciogli 200 g cioccolato fondente e 150 g burro a bagnomaria o al microonde a bassa potenza.');
+                    steps.push('Sbatti 3 uova con 150 g zucchero fino a leggero aumento di volume, poi incorpora il cioccolato.');
+                    steps.push('Aggiungi 100 g farina setacciata con movimenti delicati per mantenere la struttura umida.');
+                    steps.push('Cuoci 20-25 minuti: il centro deve essere ancora morbido ma non liquido.');
+                    steps.push('Raffredda completamente; per tagli netti, refrigerare 1 ora prima di affettare.');
+                    steps.push(...generalTips);
                     return steps;
                 }
 
                 // fallback dettagliato generico
                 steps.push('Preriscalda il forno alla temperatura indicata nella ricetta.');
-                steps.push('Prepara e pesa tutti gli ingredienti; porta a temperatura ambiente uova e latte se necessario.');
-                steps.push('Setaccia gli ingredienti secchi (farina, lievito) e miscelali.');
-                steps.push('In una ciotola lavora gli ingredienti umidi e incorpora poi i secchi in più riprese.');
-                steps.push('Aggiungi eventuali aromi o frutta; mescola il meno possibile.');
-                steps.push('Versa nello stampo preparato e cuoci per il tempo indicato, controllando con uno stecchino.');
-                steps.push('Fai riposare qualche minuto nello stampo, poi raffredda su una gratella prima di servire.');
+                steps.push('Pesa tutti gli ingredienti e porta a temperatura ambiente quelli indicati.');
+                steps.push('Setaccia gli ingredienti secchi e mescolali; prepara gli umidi in un\'altra ciotola.');
+                steps.push('Unisci gli ingredienti in più riprese, mescolando il minimo necessario per evitare di sviluppare troppo glutine.');
+                steps.push('Versa nello stampo e cuoci per il tempo indicato, controllando la cottura con uno stecchino.');
+                steps.push('Lascia riposare nello stampo qualche minuto, poi trasferisci su una gratella per raffreddare completamente.');
+                steps.push(...generalTips);
                 return steps;
             }
 
             // Aggiungi alcune ricette classiche fisse
             // classics with detailed procedures
             const classics = [
-                { keyword: 'dolce', title: 'Ciambellone classico', description: 'Il tipico ciambellone della nonna, soffice e profumato al limone.', time: '35-40 min', servings: '8 fette', ingredients: baseIngredients['Ciambellone'], instructions: [
+                { keyword: 'dolce', title: 'Ciambellone classico', image: 'img/ciambellone.svg', description: 'Il tipico ciambellone della nonna, soffice e profumato al limone.', time: '35-40 min', servings: '8 fette', ingredients: baseIngredients['Ciambellone'], instructions: [
                     'Preriscalda il forno a 180°C. Imburra e infarina uno stampo a ciambella da 24 cm.',
                     'Grattugia la scorza di 1 limone e spremine il succo; tienili da parte.',
                     'In una ciotola capiente sbatti le uova con lo zucchero fino a ottenere un composto chiaro e spumoso (8-10 minuti con frusta elettrica).',
@@ -422,7 +444,7 @@
                     'Sforna, lascia intiepidire 10 minuti nello stampo quindi capovolgi e fai raffreddare su una griglia.',
                     'Spolvera con zucchero a velo prima di servire.'
                 ] },
-                { keyword: 'dolce', title: 'Crostata alla marmellata', description: 'La crostata croccante con cuore di marmellata fatta in casa.', time: '40-50 min', servings: '8 fette', ingredients: baseIngredients['Crostata'], instructions: [
+                { keyword: 'dolce', title: 'Crostata alla marmellata', image: 'img/crostata.svg', description: 'La crostata croccante con cuore di marmellata fatta in casa.', time: '40-50 min', servings: '8 fette', ingredients: baseIngredients['Crostata'], instructions: [
                     'Prepara la pasta frolla: lavora farina e zucchero con il burro freddo fino a ottenere un composto sabbioso.',
                     'Aggiungi le uova e impasta velocemente fino a ottenere una palla liscia; avvolgila nella pellicola e lascia riposare in frigo 30 minuti.',
                     'Stendi i 2/3 della frolla su un piano infarinato e fodera una tortiera da 24 cm, facendo un piccolo bordo.',
@@ -431,7 +453,7 @@
                     'Cuoci in forno preriscaldato a 180°C per 25-30 minuti fino a doratura.',
                     'Lascia raffreddare completamente prima di sformare e servire per evitare che il ripieno colli.'
                 ] },
-                { keyword: 'dolce', title: 'Plumcake allo yogurt', description: 'Plumcake morbidissimo allo yogurt perfetto per una merenda leggera.', time: '40-50 min', servings: '8 fette', ingredients: baseIngredients['Plumcake'], instructions: [
+                { keyword: 'dolce', title: 'Plumcake allo yogurt', image: 'img/plumcake.svg', description: 'Plumcake morbidissimo allo yogurt perfetto per una merenda leggera.', time: '40-50 min', servings: '8 fette', ingredients: baseIngredients['Plumcake'], instructions: [
                     'Preriscalda il forno a 180°C e imburra uno stampo da plumcake.',
                     'In una ciotola mescola yogurt, olio e uova fino a ottenere un composto omogeneo.',
                     'In un\'altra ciotola setaccia farina e lievito, aggiungi lo zucchero.',

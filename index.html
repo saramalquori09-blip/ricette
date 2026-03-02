@@ -335,9 +335,9 @@
 
             // Aggiungi alcune ricette classiche fisse
             const classics = [
-                { keyword: 'dolce', title: 'Ciambellone classico', time: '35 min', servings: '8 fette', ingredients: baseIngredients['Ciambellone'], instructions: ['Sbatti le uova con lo zucchero','Aggiungi olio e latte','Incorpora la farina setacciata con il lievito','Versa nello stampo e cuoci in forno a 180°C per 30-40 minuti','Fai raffreddare e servi'] },
-                { keyword: 'dolce', title: 'Crostata alla marmellata', time: '30 min', servings: '8 fette', ingredients: baseIngredients['Crostata'], instructions: ['Prepara la frolla impastando farina, burro e zucchero','Stendi la frolla in una tortiera','Riempi con marmellata','Cuoci in forno a 180°C per 25-30 minuti','Lascia intiepidire prima di servire'] },
-                { keyword: 'dolce', title: 'Plumcake allo yogurt', time: '40 min', servings: '8 fette', ingredients: baseIngredients['Plumcake'], instructions: ['Mescola ingredienti secchi e umidi separatamente','Uniscili e versa nello stampo','Cuoci in forno a 180°C per 35-45 minuti','Fai raffreddare e servi'] }
+                { keyword: 'dolce', title: 'Ciambellone classico', description: 'Il tipico ciambellone della nonna, soffice e profumato al limone.', time: '35 min', servings: '8 fette', ingredients: baseIngredients['Ciambellone'], instructions: ['Sbatti le uova con lo zucchero','Aggiungi olio e latte','Incorpora la farina setacciata con il lievito','Versa nello stampo e cuoci in forno a 180°C per 30-40 minuti','Fai raffreddare e servi'] },
+                { keyword: 'dolce', title: 'Crostata alla marmellata', description: 'La crostata croccante con cuore di marmellata fatta in casa.', time: '30 min', servings: '8 fette', ingredients: baseIngredients['Crostata'], instructions: ['Prepara la frolla impastando farina, burro e zucchero','Stendi la frolla in una tortiera','Riempi con marmellata','Cuoci in forno a 180°C per 25-30 minuti','Lascia intiepidire prima di servire'] },
+                { keyword: 'dolce', title: 'Plumcake allo yogurt', description: 'Plumcake morbidissimo allo yogurt perfetto per una merenda leggera.', time: '40 min', servings: '8 fette', ingredients: baseIngredients['Plumcake'], instructions: ['Mescola ingredienti secchi e umidi separatamente','Uniscili e versa nello stampo','Cuoci in forno a 180°C per 35-45 minuti','Fai raffreddare e servi'] }
             ];
 
             classics.forEach(r => recipes.push(r));
@@ -366,9 +366,12 @@
                     'Fai raffreddare e servi'
                 ];
 
+                // build a simple description summarizing ingredients
+                const descIngredients = ingr.slice(0,3).join(', ');
                 recipes.push({
                     keyword: 'dolce',
                     title,
+                    description: `Un dolce facile e veloce: ${title}. Gli ingredienti principali sono ${descIngredients}, perfetto per la colazione o merenda.`,
                     time: base.bakeTime,
                     servings: base.servings,
                     ingredients: ingr,
@@ -385,8 +388,8 @@
 
         function getImageFor(recipe) {
             const text = encodeURIComponent(recipe.title);
-            const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400'><rect width='600' height='400' fill='%23ddd'/><text x='50%' y='50%' font-size='24' text-anchor='middle' fill='%23667eea' dy='.3em'>${text}</text></svg>`;
-            return `data:image/svg+xml;charset=UTF-8,${svg}`;
+            const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400'><rect width='600' height='400' fill='%23ddd'/><text x='50%' y='50%' font-size='24' text-anchor='middle' fill='%23667eea' dy='.3em'>${recipe.title}</text></svg>`;
+            return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
         }
 
         function displayRecipe(recipe) {
@@ -406,6 +409,7 @@
             const html = `
                 <div class="recipe-keyword">${recipe.keyword.toUpperCase()}</div>
                 <h2 class="recipe-title">${recipe.title}</h2>
+                <p class="recipe-description">${recipe.description || 'Un dolce semplice e delizioso, perfetto per la colazione o come merenda.'}</p>
                 <a href="${imgUrl}" target="_blank" rel="noopener">
                     <img class="recipe-image" src="${imgUrl}" alt="${recipe.title}" />
                 </a>

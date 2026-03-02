@@ -316,7 +316,7 @@
                 { name: 'Sbrisolona', bakeTime: '25-30 min', servings: '8 pezzi' }
             ];
 
-            const variants = ['classico','al cioccolato','al limone','alla marmellata','alla ricotta','alle mele','alla banana','alle fragole','alla cannella','alla nocciola','con gocce di cioccolato','al cocco','allo yogurt','senza burro','senza uova','vegano','senza glutine','con miele'];
+            const variants = ['classico','al cioccolato','al limone','alla marmellata','alla ricotta','alle mele','alla banana','alle fragole','alla nocciola','con gocce di cioccolato','al cocco','allo yogurt'];
 
             const baseIngredients = {
                 'Ciambellone': ['300g farina', '180g zucchero', '3 uova', '120ml olio', '200ml latte', '1 bustina lievito', 'Scorza di limone'],
@@ -387,9 +387,14 @@
         let currentRecipe = null;
 
         function getImageFor(recipe) {
-            const text = encodeURIComponent(recipe.title);
-            const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400'><rect width='600' height='400' fill='%23ddd'/><text x='50%' y='50%' font-size='24' text-anchor='middle' fill='%23667eea' dy='.3em'>${recipe.title}</text></svg>`;
-            return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+            const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400'><rect width='600' height='400' fill='%23f7f2eb'/><text x='50%' y='45%' font-size='28' text-anchor='middle' fill='%23667eea' font-family='Arial, sans-serif' dy='.3em'>${recipe.title}</text><text x='50%' y='60%' font-size='16' text-anchor='middle' fill='%23333' font-family='Arial, sans-serif'>Dolce da forno semplice e casalingo</text></svg>`;
+            // base64 encode safely
+            try {
+                const encoded = btoa(unescape(encodeURIComponent(svg)));
+                return `data:image/svg+xml;base64,${encoded}`;
+            } catch (e) {
+                return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+            }
         }
 
         function displayRecipe(recipe) {

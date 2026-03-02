@@ -333,11 +333,113 @@
 
             const recipes = [];
 
+            // Genera istruzioni dettagliate in base al tipo di dolce
+            function generateInstructions(baseName, variant, ingredientsList) {
+                const steps = [];
+                if (baseName === 'Ciambellone') {
+                    steps.push('Preriscalda il forno a 180°C. Imburra e infarina uno stampo a ciambella da 22-24 cm.');
+                    steps.push('Setaccia farina e lievito in una ciotola e tieni da parte.');
+                    steps.push('In un\'altra ciotola monta le uova con lo zucchero fino a ottenere un composto chiaro e spumoso.');
+                    steps.push('Aggiungi olio a filo e il latte, alternando e mescolando delicatamente.');
+                    steps.push('Incorpora la scorza di limone e la farina setacciata, mescolando dal basso verso l\'alto.');
+                    steps.push('Versa nello stampo, livella e cuoci 30-40 minuti; prova con uno stecchino.');
+                    steps.push('Sforna, lascia intiepidire 10 minuti nello stampo e poi raffredda su una gratella.');
+                    return steps;
+                }
+
+                if (baseName === 'Crostata') {
+                    steps.push('Prepara la pasta frolla mescolando farina e burro freddo fino a ottenere un composto sabbioso.');
+                    steps.push('Aggiungi zucchero e uova e impasta rapidamente fino a ottenere una palla liscia.');
+                    steps.push('Riposa in frigorifero 30 minuti avvolta nella pellicola.');
+                    steps.push('Stendi la frolla e fodera una tortiera; bucherella il fondo e aggiungi la marmellata.');
+                    steps.push('Forma la griglia superiore con strisce di frolla e cuoci a 180°C per 25-30 minuti.');
+                    steps.push('Fai raffreddare completamente prima di servire.');
+                    return steps;
+                }
+
+                if (baseName === 'Plumcake' || baseName === 'Torta allo Yogurt') {
+                    steps.push('Preriscalda il forno a 180°C e prepara uno stampo da plumcake o tortiera.');
+                    steps.push('In una ciotola unisci gli ingredienti umidi (uova, yogurt/olio, latte) e mescola.');
+                    steps.push('In un\'altra ciotola setaccia le farine con il lievito e lo zucchero.');
+                    steps.push('Unisci i secchi ai liquidi in più riprese, mescolando il meno possibile.');
+                    steps.push('Aggiungi eventuali pezzetti di frutta o scaglie di cioccolato.');
+                    steps.push('Versa nello stampo e cuoci 35-45 minuti; controlla la cottura con uno stecchino.');
+                    steps.push('Raffredda su una gratella prima di servire.');
+                    return steps;
+                }
+
+                if (baseName === 'Muffin') {
+                    steps.push('Preriscalda il forno a 200°C e prepara uno stampo per muffin con pirottini.');
+                    steps.push('Setaccia farina, zucchero e lievito; aggiungi un pizzico di sale.');
+                    steps.push('In un\'altra ciotola miscela uovo, latte e olio.');
+                    steps.push('Unisci gli ingredienti umidi ai secchi in poche mescolate (l\'impasto deve rimanere grumoso).');
+                    steps.push('Riempi i pirottini per 2/3 e cuoci 18-22 minuti fino a doratura.');
+                    steps.push('Lascia intiepidire e servi.');
+                    return steps;
+                }
+
+                if (baseName === 'Biscotti') {
+                    steps.push('Prepara l\'impasto mescolando burro morbido e zucchero fino a crema.');
+                    steps.push('Aggiungi l\'uovo e vaniglia, poi incorpora la farina fino a ottenere un impasto compatto.');
+                    steps.push('Stendi l\'impasto e ritaglia i biscotti con formine; disponili su una teglia.');
+                    steps.push('Cuoci a 170°C per 10-15 minuti fino ai bordi dorati.');
+                    steps.push('Raffredda su una gratella; si induriscono leggermente raffreddandosi.');
+                    return steps;
+                }
+
+                if (baseName === 'Brownies') {
+                    steps.push('Preriscalda il forno a 170°C e fodera una teglia quadrata con carta forno.');
+                    steps.push('Sciogli cioccolato e burro a bagnomaria e lascia intiepidire.');
+                    steps.push('Mescola uova e zucchero fino a diventare lucidi, poi incorpora il cioccolato sciolto.');
+                    steps.push('Aggiungi la farina setacciata con movimenti delicati.');
+                    steps.push('Versa nella teglia e cuoci 20-25 minuti: l\'interno deve rimanere umido.');
+                    steps.push('Raffredda completamente prima di tagliare a quadrotti.');
+                    return steps;
+                }
+
+                // fallback dettagliato generico
+                steps.push('Preriscalda il forno alla temperatura indicata nella ricetta.');
+                steps.push('Prepara e pesa tutti gli ingredienti; porta a temperatura ambiente uova e latte se necessario.');
+                steps.push('Setaccia gli ingredienti secchi (farina, lievito) e miscelali.');
+                steps.push('In una ciotola lavora gli ingredienti umidi e incorpora poi i secchi in più riprese.');
+                steps.push('Aggiungi eventuali aromi o frutta; mescola il meno possibile.');
+                steps.push('Versa nello stampo preparato e cuoci per il tempo indicato, controllando con uno stecchino.');
+                steps.push('Fai riposare qualche minuto nello stampo, poi raffredda su una gratella prima di servire.');
+                return steps;
+            }
+
             // Aggiungi alcune ricette classiche fisse
+            // classics with detailed procedures
             const classics = [
-                { keyword: 'dolce', title: 'Ciambellone classico', description: 'Il tipico ciambellone della nonna, soffice e profumato al limone.', time: '35 min', servings: '8 fette', ingredients: baseIngredients['Ciambellone'], instructions: ['Sbatti le uova con lo zucchero','Aggiungi olio e latte','Incorpora la farina setacciata con il lievito','Versa nello stampo e cuoci in forno a 180°C per 30-40 minuti','Fai raffreddare e servi'] },
-                { keyword: 'dolce', title: 'Crostata alla marmellata', description: 'La crostata croccante con cuore di marmellata fatta in casa.', time: '30 min', servings: '8 fette', ingredients: baseIngredients['Crostata'], instructions: ['Prepara la frolla impastando farina, burro e zucchero','Stendi la frolla in una tortiera','Riempi con marmellata','Cuoci in forno a 180°C per 25-30 minuti','Lascia intiepidire prima di servire'] },
-                { keyword: 'dolce', title: 'Plumcake allo yogurt', description: 'Plumcake morbidissimo allo yogurt perfetto per una merenda leggera.', time: '40 min', servings: '8 fette', ingredients: baseIngredients['Plumcake'], instructions: ['Mescola ingredienti secchi e umidi separatamente','Uniscili e versa nello stampo','Cuoci in forno a 180°C per 35-45 minuti','Fai raffreddare e servi'] }
+                { keyword: 'dolce', title: 'Ciambellone classico', description: 'Il tipico ciambellone della nonna, soffice e profumato al limone.', time: '35-40 min', servings: '8 fette', ingredients: baseIngredients['Ciambellone'], instructions: [
+                    'Preriscalda il forno a 180°C. Imburra e infarina uno stampo a ciambella da 24 cm.',
+                    'Grattugia la scorza di 1 limone e spremine il succo; tienili da parte.',
+                    'In una ciotola capiente sbatti le uova con lo zucchero fino a ottenere un composto chiaro e spumoso (8-10 minuti con frusta elettrica).',
+                    'Aggiungi l\'olio a filo continuando a montare, poi incorpora il latte e il succo di limone.',
+                    'Setaccia la farina con il lievito e incorporala poco per volta, mescolando dal basso verso l\'alto per non smontare il composto.',
+                    'Versa l\'impasto nello stampo e livella la superficie con una spatola.',
+                    'Cuoci in forno a 180°C per 30-40 minuti controllando la cottura con uno stecchino (deve uscire asciutto).',
+                    'Sforna, lascia intiepidire 10 minuti nello stampo quindi capovolgi e fai raffreddare su una griglia.',
+                    'Spolvera con zucchero a velo prima di servire.'
+                ] },
+                { keyword: 'dolce', title: 'Crostata alla marmellata', description: 'La crostata croccante con cuore di marmellata fatta in casa.', time: '40-50 min', servings: '8 fette', ingredients: baseIngredients['Crostata'], instructions: [
+                    'Prepara la pasta frolla: lavora farina e zucchero con il burro freddo fino a ottenere un composto sabbioso.',
+                    'Aggiungi le uova e impasta velocemente fino a ottenere una palla liscia; avvolgila nella pellicola e lascia riposare in frigo 30 minuti.',
+                    'Stendi i 2/3 della frolla su un piano infarinato e fodera una tortiera da 24 cm, facendo un piccolo bordo.',
+                    'Buca il fondo con una forchetta e spalma la marmellata (non troppo liquida) in modo uniforme.',
+                    'Stendi il resto della frolla e crea le strisce per la griglia superiore; decora la crostata.',
+                    'Cuoci in forno preriscaldato a 180°C per 25-30 minuti fino a doratura.',
+                    'Lascia raffreddare completamente prima di sformare e servire per evitare che il ripieno colli.'
+                ] },
+                { keyword: 'dolce', title: 'Plumcake allo yogurt', description: 'Plumcake morbidissimo allo yogurt perfetto per una merenda leggera.', time: '40-50 min', servings: '8 fette', ingredients: baseIngredients['Plumcake'], instructions: [
+                    'Preriscalda il forno a 180°C e imburra uno stampo da plumcake.',
+                    'In una ciotola mescola yogurt, olio e uova fino a ottenere un composto omogeneo.',
+                    'In un\'altra ciotola setaccia farina e lievito, aggiungi lo zucchero.',
+                    'Unisci gli ingredienti secchi a quelli umidi in più riprese, mescolando solo il necessario.',
+                    'Aggiungi eventuali pezzetti di frutta o scaglie di cioccolato se graditi.',
+                    'Versa l\'impasto nello stampo e inforna per 35-45 minuti; verifica con stecchino.',
+                    'Raffredda su una gratella prima di tagliare a fette.'
+                ] }
             ];
 
             classics.forEach(r => recipes.push(r));
@@ -358,13 +460,7 @@
                 if (variant.includes('nocciola') || variant.includes('pistacchio')) ingr.push('30g frutta secca tritata');
                 if (variant.includes('cocco')) ingr.push('30g cocco grattugiato');
 
-                const instructions = [
-                    'Preriscalda il forno a 170-180°C',
-                    'Mescola ingredienti secchi e umidi separatamente',
-                    'Unisci i composti e amalgama senza lavorare troppo',
-                    `Versa l'impasto nello stampo e inforna per ${base.bakeTime}`,
-                    'Fai raffreddare e servi'
-                ];
+                const instructions = generateInstructions(base.name, variant, ingr);
 
                 // build a simple description summarizing ingredients
                 const descIngredients = ingr.slice(0,3).join(', ');
@@ -387,14 +483,33 @@
         let currentRecipe = null;
 
         function getImageFor(recipe) {
-            const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400'><rect width='600' height='400' fill='%23f7f2eb'/><text x='50%' y='45%' font-size='28' text-anchor='middle' fill='%23667eea' font-family='Arial, sans-serif' dy='.3em'>${recipe.title}</text><text x='50%' y='60%' font-size='16' text-anchor='middle' fill='%23333' font-family='Arial, sans-serif'>Dolce da forno semplice e casalingo</text></svg>`;
-            // base64 encode safely
-            try {
-                const encoded = btoa(unescape(encodeURIComponent(svg)));
-                return `data:image/svg+xml;base64,${encoded}`;
-            } catch (e) {
-                return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+            // crea SVG più ricco con emoji e sfondo colorato
+            function svgToDataUri(svg) {
+                try {
+                    return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
+                } catch (e) {
+                    return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+                }
             }
+
+            const emoji = '🧁';
+            const title = (recipe.title || 'Dolce').replace(/&/g, '&amp;');
+            const subtitle = 'Dolce da forno semplice e casalingo';
+            // colori diversi per varietà
+            const bg = '#f7f2eb';
+            const accent = '#667eea';
+
+            const svg = `<?xml version="1.0" encoding="UTF-8"?>\n` +
+                `<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800' viewBox='0 0 1200 800'>` +
+                `<defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='${bg}'/><stop offset='1' stop-color='#fff'/></linearGradient></defs>` +
+                `<rect width='1200' height='800' fill='url(#g)'/>` +
+                `<circle cx='200' cy='200' r='140' fill='${accent}' opacity='0.08'/>` +
+                `<text x='50%' y='35%' font-size='80' text-anchor='middle' fill='${accent}' font-family='Segoe UI, Arial, sans-serif'>${emoji}</text>` +
+                `<text x='50%' y='55%' font-size='48' text-anchor='middle' fill='${accent}' font-family='Segoe UI, Arial, sans-serif' font-weight='700'>${title}</text>` +
+                `<text x='50%' y='66%' font-size='24' text-anchor='middle' fill='#333' font-family='Segoe UI, Arial, sans-serif'>${subtitle}</text>` +
+                `</svg>`;
+
+            return svgToDataUri(svg);
         }
 
         function displayRecipe(recipe) {

@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ricette Casuali - Ispirazione Culinaria</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .random-button {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .random-button:hover {
+            box-shadow: 0 10px 25px rgba(245, 87, 108, 0.4);
+        }
+
+        .recipe-container {
+            display: none;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            border-left: 5px solid #667eea;
+            animation: slideIn 0.5s ease;
+        }
+
+        .recipe-container.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .recipe-title {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .recipe-keyword {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-bottom: 15px;
+        }
+
+        .recipe-section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            color: #764ba2;
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #f5576c;
+            padding-bottom: 5px;
+        }
+
+        .ingredients-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .ingredients-list li {
+            padding: 8px 0;
+            color: #555;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+        }
+
+        .ingredients-list li:before {
+            content: "✓";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .instructions-list {
+            list-style: none;
+            counter-reset: step-counter;
+            padding-left: 0;
+        }
+
+        .instructions-list li {
+            counter-increment: step-counter;
+            margin-bottom: 15px;
+            padding-left: 35px;
+            position: relative;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .instructions-list li:before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .time-servings {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .time-servings div {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .time-servings strong {
+            color: #667eea;
+            min-width: 80px;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #fadbd8;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .error-message.active {
+            display: block;
+        }
+
+        .featured-keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+        }
+
+        .featured-keywords span {
+            background: #e8eef7;
+            color: #667eea;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .featured-keywords span:hover {
+            background: #667eea;
+            color: white;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍳 Ricette Casuali</h1>
+        <p class="subtitle">Scopri una nuova ricetta con una sola parola!</p>
+
+        <div class="search-box">
+            <input type="text" id="keywordInput" placeholder="Scrivi una parola chiave (es: pasta, pizza, dolce)..." />
+            <button onclick="searchRecipe()">Cerca</button>
+            <button class="random-button" onclick="randomRecipe()">🎲 Casuale</button>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <div class="recipe-container" id="recipeContainer"></div>
+
+        <div class="featured-keywords">
+            <strong style="width: 100%; color: #333;">Prova con:</strong>
+            <span onclick="searchByKeyword('pasta')">Pasta</span>
+            <span onclick="searchByKeyword('dolce')">Dolce</span>
+            <span onclick="searchByKeyword('pizza')">Pizza</span>
+            <span onclick="searchByKeyword('verdure')">Verdure</span>
+            <span onclick="searchByKeyword('carne')">Carne</span>
+            <span onclick="searchByKeyword('pesce')">Pesce</span>
+            <span onclick="searchByKeyword('risotto')">Risotto</span>
+            <span onclick="searchByKeyword('soup')">Zuppa</span>
+        </div>
+    </div>
+
+    <script>
+        const recipes = [
+            // PASTA
+            {
+                keyword: 'pasta',
+                title: 'Carbonara Autentica',
+                time: '20 min',
+                servings: '4 persone',
+                ingredients: [
+                    '400g spaghetti',
+                    '200g guanciale',
+                    '4 uova',
+                    '100g Pecorino Romano',
+                    'Pepe nero',
+                    'Sale'
+                ],
+                instructions: [
+                    'Taglia il guanciale a listarelle e cuocilo in padella fino a renderlo croccante',
+                    'Cuoci la pasta in acqua salata',
+                    'Mescola le uova intere con il formaggio grattugiato e pepe nero',
+                    'Scola la pasta e versala nel guanciale ancora caldo',
+                    'Aggiungi il composto uova e formaggio, mescola velocemente. Non cuocere le uova!',
+                    'Servi subito con pepe nero in abbondanza'
+                ]
+            },
+            {
+                keyword: 'pasta',
+                title: 'Cacio e Pepe',
+                time: '15 min',
+                servings: '4 persone',
+                ingredients: [
+                    '400g spaghetti o tonnarelli',
+                    '200g Pecorino Romano',
+                    'Pepe nero in grani',
+                    'Sale'
+                ],
+                instructions: [
+                    'Toste il pepe nero in una padella grande',
+                    'Aggiungi acqua calda dalla cottura della pasta',
+                    'Cuoci la pasta e aggiungila al pepe con un po\' di acqua di cottura',
+                    'Aggiungi il formaggio grattugiato mentre mescoli velocemente',
+                    'Aggiungi acqua di cottura finché non ottieni una crema vellutata',
+                    'Servi immediatamente'
+                ]
+            },
+            {
+                keyword: 'pasta',
+                title: 'Amatriciana',
+                time: '30 min',
+                servings: '4 persone',
+                ingredients: [
+                    '400g spaghetti o bucatini',
+                    '150g guanciale',
+                    '400g pomodori pelati',
+                    '100g Pecorino Romano',
+                    'Peperoncino',
+                    'Sale'
+                ],
+                instructions: [
+                    'Taglia il guanciale a listarelle e cuocilo in padella',
+                    'Aggiungi un po\' di peperoncino',
+                    'Versa i pomodori pelati e cuoci 15-20 minuti',
+                    'Cuoci la pasta in acqua salata',
+                    'Scola la pasta al dente e uniscila al ragù',
+                    'Mantecate con il Pecorino Romano grattugiato'
+                ]
+            },
+
+            // PIZZA
+            {
+                keyword: 'pizza',
+                title: 'Pizza Margherita',
+                time: '2 ore (con lievitazione)',
+                servings: '2 persone',
+                ingredients: [
+                    '500g farina di tipo 0',
+                    '325ml acqua',
+                    '10g sale',
+                    '1g lievito di birra secco',
+                    '400g pomodori pelati',
+                    '250g mozzarella di bufala',
+                    'Basilico fresco',
+                    'Olio extra vergine'
+                ],
+                instructions: [
+                    'Sciogli il lievito in acqua tiepida',
+                    'Mescola la farina con il lievito sciolto',
+                    'Aggiungi il sale gradualmente e impasta per 10 minuti',
+                    'Lascia lievitare per 60-90 minuti fino al doppio del volume',
+                    'Suddividi l\'impasto in 2 pezzi e stendi sui tegami oleati',
+                    'Condisci con pomodori, mozzarella, basilico e olio',
+                    'Cuoci in forno a 250°C per 12-15 minuti'
+                ]
+            },
+            {
+                keyword: 'pizza',
+                title: 'Pizza al Taglio - Romana',
+                time: '1 giorno (con lievitazione lunga)',
+                servings: '8 persone',
+                ingredients: [
+                    '500g farina',
+                    '350ml acqua',
+                    '15g sale',
+                    '1g lievito di birra secco',
+                    'Olio extra vergine',
+                    'Condimenti a scelta'
+                ],
+                instructions: [
+                    'Prepara l\'impasto con farina, acqua, lievito e sale',
+                    'Lascia lievitare a temperatura ambiente per almeno 24 ore',
+                    'Stendi l\'impasto su teglia unta con olio',
+                    'Lascia riposare 30 minuti',
+                    'Condisci con i tuoi ingredienti preferiti',
+                    'Cuoci a 220°C per 20-25 minuti fino a doratura'
+                ]
+            },
+
+            // DOLCE
+            {
+                keyword: 'dolce',
+                title: 'Tiramisu Classico',
+                time: '20 min (+ 4 ore riposo)',
+                servings: '8 persone',
+                ingredients: [
+                    '500g mascarpone',
+                    '150g zucchero',
+                    '6 uova (rossi)',
+                    '400g biscotti Savoiardi',
+                    '300ml caffè espresso freddo',
+                    '50g cacao in polvere',
+                    'Liquore (facoltativo)'
+                ],
+                instructions: [
+                    'Sbatti i rossi con lo zucchero fino a crema pallida',
+                    'Incorpora delicatamente il mascarpone',
+                    'Tuffa velocemente i biscotti nel caffè',
+                    'Crea uno strato di biscotti inumiditi in una teglia',
+                    'Versa metà della crema di mascarpone',
+                    'Ripeti gli strati',
+                    'Cospargere di cacao in polvere',
+                    'Refrigera almeno 4 ore prima di servire'
+                ]
+            },
+            {
+                keyword: 'dolce',
+                title: 'Panna Cotta',
+                time: '15 min (+ 4 ore riposo)',
+                servings: '4 persone',
+                ingredients: [
+                    '500ml panna fresca',
+                    '100g zucchero',
+                    '1 cucchiaino di vaniglia',
+                    '4g gelatina in fogli',
+                    '50ml acqua'
+                ],
+                instructions: [
+                    'Ammorbidisci la gelatina in acqua fredda',
+                    'Scalda la panna con lo zucchero senza farla bollire',
+                    'Strizza la gelatina e scioglila nella panna calda',
+                    'Aggiungi la vaniglia',
+                    'Versa nei bicchieri o negli stampi',
+                    'Refrigera almeno 4 ore',
+                    'Servi con frutti di bosco o salsa ai frutti rossi'
+                ]
+            },
+
+            // VERDURE
+            {
+                keyword: 'verdure',
+                title: 'Melanzane alla Parmigiana',
+                time: '1 ora',
+                servings: '4 persone',
+                ingredients: [
+                    '4 melanzane medie',
+                    '400g pomodori pelati',
+                    '300g mozzarella',
+                    '100g Parmigiano Reggiano',
+                    'Basilico fresco',
+                    'Olio extra vergine',
+                    'Sale e pepe'
+                ],
+                instructions: [
+                    'Affetta le melanzane e cospargile di sale, lascia riposare 30 minuti',
+                    'Asciuga le melanzane e friggile in olio caldo',
+                    'Prepara il ragù con pomodori, aglio e basilico',
+                    'In una teglia oleata crea strati: salsa, melanzane, mozzarella, Parmigiano',
+                    'Ripeti i strati',
+                    'Cuoci a 180°C per 30-35 minuti fino a doratura'
+                ]
+            },
+            {
+                keyword: 'verdure',
+                title: 'Caponata Siciliana',
+                time: '50 min',
+                servings: '6 persone',
+                ingredients: [
+                    '800g melanzane',
+                    '300g pomodori',
+                    '150g olive nere',
+                    '50g capperi',
+                    '100ml aceto di vino',
+                    '50g pinoli (facoltativo)',
+                    'Olio extra vergine'
+                ],
+                instructions: [
+                    'Taglia le melanzane in cubi e friggile in olio caldo',
+                    'In un\'altra padella soffriggi pomodori a pezzi',
+                    'Aggiungi le melanzane fritte ai pomodori',
+                    'Aggiungi olive, capperi, pinoli, aceto e zucchero',
+                    'Cuoci a fuoco basso per 15-20 minuti',
+                    'Servi a temperatura ambiente'
+                ]
+            },
+
+            // CARNE
+            {
+                keyword: 'carne',
+                title: 'Osso Buco alla Milanese',
+                time: '2 ore',
+                servings: '4 persone',
+                ingredients: [
+                    '4 ossi buchi di vitello',
+                    '150g carote',
+                    '150g sedano',
+                    '100g cipolla',
+                    '250ml vino bianco',
+                    '400g pomodori pelati',
+                    '500ml brodo vegetale',
+                    'Farina, olio, sale, pepe'
+                ],
+                instructions: [
+                    'Passeg gli ossi buchi in farina',
+                    'Rosola in olio caldo su tutti i lati, metti da parte',
+                    'Sofriggi le verdure tagliate finemente',
+                    'Sfuma con vino bianco',
+                    'Aggiungi i pomodori pelati',
+                    'Rimetri gli ossi buchi nel sughetto',
+                    'Aggiungi brodo e cuoci a basso fuoco per 1,5 ore',
+                    'Servi con polenta o riso'
+                ]
+            },
+            {
+                keyword: 'carne',
+                title: 'Polpettone della Nonna',
+                time: '1 ora',
+                servings: '4 persone',
+                ingredients: [
+                    '500g carne macinata mista',
+                    '2 uova',
+                    '100g pane bagnato nel latte',
+                    '50g Parmigiano Reggiano',
+                    '2 spicchi aglio',
+                    '400g pomodori pelati',
+                    'Olio, sale, pepe, prezzemolo'
+                ],
+                instructions: [
+                    'Mescola carne, uova, pane bagnato, formaggio, prezzemolo, aglio tritato',
+                    'Forma un polpettone e rosola in olio caldo',
+                    'Versa i pomodori pelati attorno',
+                    'Copri e cuoci a basso fuoco per 45-50 minuti',
+                    'Taglia a fette e servi con il sugo'
+                ]
+            },
+
+            // PESCE
+            {
+                keyword: 'pesce',
+                title: 'Branzino al Forno',
+                time: '40 min',
+                servings: '4 persone',
+                ingredients: [
+                    '2 branzini di 400g',
+                    'Limone',
+                    'Pomodori ciliegini',
+                    'Olio extra vergine',
+                    'Basilico e prezzemolo',
+                    'Sale e pepe',
+                    'Aglio'
+                ],
+                instructions: [
+                    'Pulisci i branzini e asciugali',
+                    'Riempi la cavità con fette di limone, aglio e erbe aromatiche',
+                    'Disponi i branzini su una teglia oleata',
+                    'Circonda con pomodori ciliegini',
+                    'Condisci con olio, sale e pepe',
+                    'Cuoci a 180°C per 25-30 minuti',
+                    'Servi con spicchi di limone fresco'
+                ]
+            },
+            {
+                keyword: 'pesce',
+                title: 'Spaghetti ai Frutti di Mare',
+                time: '45 min',
+                servings: '4 persone',
+                ingredients: [
+                    '400g spaghetti',
+                    '300g vongole',
+                    '200g cozze',
+                    '200g gamberi',
+                    '400g pomodori pelati',
+                    '100g vino bianco',
+                    '3 spicchi aglio',
+                    'Prezzemolo e olio'
+                ],
+                instructions: [
+                    'Pulisci vongole e cozze sotto acqua fredda',
+                    'In padella sofriggi aglio in olio',
+                    'Aggiungi vongole e cozze, sfuma con vino',
+                    'Aggiungi gamberi già puliti',
+                    'Quando i molluschi si aprono aggiungi pomodori',
+                    'Cuoci la pasta e aggiungila al sughetto',
+                    'Manteca bene e servi con prezzemolo fresco'
+                ]
+            },
+
+            // RISOTTO
+            {
+                keyword: 'risotto',
+                title: 'Risotto ai Funghi Porcini',
+                time: '45 min',
+                servings: '4 persone',
+                ingredients: [
+                    '320g riso Arborio',
+                    '150g funghi porcini secchi',
+                    '100g cipolla',
+                    '1l brodo vegetale',
+                    '100ml vino bianco',
+                    '50g burro',
+                    '50g Parmigiano Reggiano',
+                    'Olio e sale'
+                ],
+                instructions: [
+                    'Ammolla i funghi porcini in acqua calda per 20 minuti',
+                    'Filtra l\'acqua dei funghi e aggiungila al brodo',
+                    'Sofriggi la cipolla tritata in olio',
+                    'Aggiungi il riso e toastalo per 2 minuti',
+                    'Sfuma con vino bianco',
+                    'Aggiungi il brodo ladle per ladle, mescolando costantemente',
+                    'Aggiungi i funghi tritati a metà cottura',
+                    'A termine aggiunggi burro e formaggio (mantecatura)'
+                ]
+            },
+            {
+                keyword: 'risotto',
+                title: 'Risotto allo Zafferano (Milanese)',
+                time: '40 min',
+                servings: '4 persone',
+                ingredients: [
+                    '320g riso Carnaroli',
+                    '1g zafferano in pistilli',
+                    '100g cipolla',
+                    '100ml vino bianco',
+                    '1l brodo di carne',
+                    '50g burro',
+                    '75g Parmigiano Reggiano',
+                    'Olio e sale'
+                ],
+                instructions: [
+                    'Sofriggi la cipolla tritata finemente in olio',
+                    'Aggiungi il riso e toastalo',
+                    'Sfuma con vino bianco',
+                    'Aggiungi il brodo caldo poco per volta',
+                    'A metà cottura aggiungi lo zafferano sciolto in acqua calda',
+                    'Continua ad aggiungere brodo fino a cottura',
+                    'Manteca con burro e Parmigiano',
+                    'Servi immediatamente'
+                ]
+            },
+
+            // ZUPPA
+            {
+                keyword: 'zuppa',
+                title: 'Minestrone Classico',
+                time: '1 ora',
+                servings: '6 persone',
+                ingredients: [
+                    '200g pasta piccola',
+                    '2 carote',
+                    '2 gambi sedano',
+                    '1 cipolla',
+                    '300g zucchine',
+                    '200g fagioli cotti',
+                    '400g pomodori pelati',
+                    '2l brodo vegetale',
+                    'Olio, sale, prezzemolo',
+                    'Parmigiano Reggiano'
+                ],
+                instructions: [
+                    'Trita le verdure finemente',
+                    'Sofriggi cipolla, carote e sedano in olio',
+                    'Aggiungi le zucchine tagliate a cubetti',
+                    'Versa il brodo e porta a ebollizione',
+                    'Aggiungi i pomodori pelati',
+                    'Cuoci per 20 minuti',
+                    'Aggiungi la pasta e i fagioli',
+                    'Cuoci altri 15 minuti',
+                    'Servi con una generosa manciata di Parmigiano'
+                ]
+            },
+            {
+                keyword: 'zuppa',
+                title: 'Zuppa di Pesce (Brodetto)',
+                time: '1 ora',
+                servings: '6 persone',
+                ingredients: [
+                    '600g pesce misto (pagello, branzino)',
+                    '300g molluschi misti',
+                    '100g gamberi',
+                    '400g pomodori pelati',
+                    '1 cipolla',
+                    '2 spicchi aglio',
+                    '100ml vino bianco',
+                    '1l brodo di pesce',
+                    'Olio, sale, pepe, prezzemolo'
+                ],
+                instructions: [
+                    'Pulisci e affetta il pesce',
+                    'Sofriggi cipolla e aglio in olio',
+                    'Aggiungi il pesce e rosola leggermente',
+                    'Sfuma con vino bianco',
+                    'Aggiungi pomodori pelati',
+                    'Versa il brodo di pesce',
+                    'Cuoci a basso fuoco per 30 minuti',
+                    'Aggiungi molluschi e gamberi negli ultimi 10 minuti',
+                    'Servi con pane tostato e prezzemolo'
+                ]
+            }
+        ];
+
+        function displayRecipe(recipe) {
+            const container = document.getElementById('recipeContainer');
+            if (!recipe) {
+                document.getElementById('errorMessage').textContent = 'Nessuna ricetta trovata per questa ricerca!';
+                document.getElementById('errorMessage').classList.add('active');
+                container.classList.remove('active');
+                return;
+            }
+
+            document.getElementById('errorMessage').classList.remove('active');
+
+            const html = `
+                <div class="recipe-keyword">${recipe.keyword.toUpperCase()}</div>
+                <h2 class="recipe-title">${recipe.title}</h2>
+                
+                <div class="time-servings">
+                    <div>
+                        <strong>⏱️ Tempo:</strong>
+                        ${recipe.time}
+                    </div>
+                    <div>
+                        <strong>👥 Porzioni:</strong>
+                        ${recipe.servings}
+                    </div>
+                </div>
+
+                <div class="recipe-section">
+                    <h3 class="section-title">📝 Ingredienti</h3>
+                    <ul class="ingredients-list">
+                        ${recipe.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="recipe-section">
+                    <h3 class="section-title">👨‍🍳 Preparazione</h3>
+                    <ol class="instructions-list">
+                        ${recipe.instructions.map(instr => `<li>${instr}</li>`).join('')}
+                    </ol>
+                </div>
+            `;
+
+            container.innerHTML = html;
+            container.classList.add('active');
+        }
+
+        function searchRecipe() {
+            const keyword = document.getElementById('keywordInput').value.toLowerCase().trim();
+            if (!keyword) {
+                document.getElementById('errorMessage').textContent = 'Per favore inserisci una parola chiave!';
+                document.getElementById('errorMessage').classList.add('active');
+                return;
+            }
+
+            const matching = recipes.filter(r => r.keyword.includes(keyword) || keyword.includes(r.keyword));
+            if (matching.length === 0) {
+                document.getElementById('errorMessage').textContent = `Nessuna ricetta trovata con la parola "${keyword}". Prova con: pasta, pizza, dolce, verdure, carne, pesce, risotto, zuppa`;
+                document.getElementById('errorMessage').classList.add('active');
+                document.getElementById('recipeContainer').classList.remove('active');
+                return;
+            }
+
+            const recipe = matching[Math.floor(Math.random() * matching.length)];
+            displayRecipe(recipe);
+        }
+
+        function randomRecipe() {
+            const recipe = recipes[Math.floor(Math.random() * recipes.length)];
+            document.getElementById('keywordInput').value = recipe.keyword;
+            displayRecipe(recipe);
+        }
+
+        function searchByKeyword(keyword) {
+            document.getElementById('keywordInput').value = keyword;
+            searchRecipe();
+        }
+
+        // Permetti la ricerca con Enter
+        document.getElementById('keywordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchRecipe();
+            }
+        });
+
+        // Mostra una ricetta casuale al caricamento
+        window.addEventListener('load', randomRecipe);
+    </script>
+</body>
+</html>

@@ -559,9 +559,18 @@
 
             let i = 0;
             const maxRecipes = 30; // includi quelle manuali
+            let crostataCount = 0; // contatore per limitare crostate
             while (recipes.length < maxRecipes) {
                 const base = bases[i % bases.length];
                 const variant = variants[i % variants.length];
+                // limita a 3 crostate totali (incluse eventuali manuali già presenti)
+                if (base.name === 'Crostata') {
+                    if (crostataCount >= 3) {
+                        i++;
+                        continue;
+                    }
+                    crostataCount++;
+                }
                 const title = `${base.name} ${variant}`.replace(/\s+/g,' ').trim();
                 const ingr = (baseIngredients[base.name] || ['200g farina','100g zucchero','2 uova']).slice();
 

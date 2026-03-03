@@ -316,7 +316,8 @@
             ];
 
             // rimosse varianti con cocco o esotiche
-            const variants = ['classico','al cioccolato','al limone','alla marmellata','alla ricotta','alle mele','alla banana','alle fragole','alla nocciola','con gocce di cioccolato','allo yogurt'];
+            // ridotte varianti per mantenere un numero contenuto di ricette
+            const variants = ['classico','al cioccolato','al limone','alla marmellata','alle mele','alle fragole'];
 
             const baseIngredients = {
                 'Ciambellone': ['300g farina', '180g zucchero', '3 uova', '120ml olio', '200ml latte', '1 bustina lievito', 'Scorza di limone'],
@@ -557,7 +558,8 @@
             classics.forEach(r => recipes.push(r));
 
             let i = 0;
-            while (recipes.length < 100) {
+            const maxRecipes = 30; // includi quelle manuali
+            while (recipes.length < maxRecipes) {
                 const base = bases[i % bases.length];
                 const variant = variants[i % variants.length];
                 const title = `${base.name} ${variant}`.replace(/\s+/g,' ').trim();
@@ -622,6 +624,16 @@
                 // se il titolo indica fragole ma gli ingredienti non le contengono, aggiungile
                 if (r.title && r.title.toLowerCase().includes('fragol') && !r.ingredients.join(' ').toLowerCase().includes('fragol')) {
                     r.ingredients.push('150-200g fragole fresche a pezzi');
+                }
+
+                // se il titolo indica gocce di cioccolato ma gli ingredienti non le contengono, aggiungile
+                if (r.title && r.title.toLowerCase().includes('gocce') && !r.ingredients.join(' ').toLowerCase().includes('gocce')) {
+                    r.ingredients.push('50g gocce di cioccolato');
+                }
+
+                // se il titolo indica cioccolato ma gli ingredienti non lo contengono, aggiungilo
+                if (r.title && r.title.toLowerCase().includes('cioccolato') && !r.title.toLowerCase().includes('gocce') && !r.ingredients.join(' ').toLowerCase().includes('cioccolato')) {
+                    r.ingredients.push('100g cioccolato fondente');
                 }
 
                 if (!r.keyword) r.keyword = 'dolce';

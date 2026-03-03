@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#faf7f2"/>
+      <stop offset="100%" stop-color="#fff"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bgGrad)"/>
+  <circle cx="950" cy="250" r="140" fill="#d4a574" opacity="0.1"/>
+  
+  <!-- Round cake -->
+  <circle cx="600" cy="350" r="140" fill="#f5e6d3" stroke="#c9a876" stroke-width="2"/>
+  
+  <!-- Powdered sugar on top -->
+  <circle cx="600" cy="320" r="145" fill="#fffaf0" opacity="0.6"/>
+  <circle cx="570" cy="310" r="20" fill="#fff"/>
+  <circle cx="600" cy="300" r="18" fill="#fff"/>
+  <circle cx="630" cy="308" r="22" fill="#fff"/>
+  
+  <!-- Lemon zest accent -->
+  <circle cx="550" cy="200" r="15" fill="#ffd700"/>
+  
+  <!-- Text -->
+  <text x="600" y="580" font-size="48" text-anchor="middle" fill="#c9a876" font-weight="bold" font-family="Segoe UI, Arial">Torta Paradiso</text>
+  <text x="600" y="620" font-size="28" text-anchor="middle" fill="#999" font-family="Segoe UI, Arial">Elegante e profumata</text>
+</svg>

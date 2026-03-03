@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#faf6f1"/>
+      <stop offset="100%" stop-color="#fff"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bgGrad)"/>
+  <circle cx="200" cy="250" r="150" fill="#ff6b6b" opacity="0.08"/>
+  
+  <!-- Round cake base -->
+  <circle cx="600" cy="360" r="130" fill="#e8d4c0" stroke="#c9a876" stroke-width="2"/>
+  
+  <!-- Apple slices arranged in fan pattern -->
+  <path d="M 600 250 L 550 300 L 565 330 Z" fill="#ff6b6b" stroke="#d63031" stroke-width="1"/>
+  <path d="M 600 250 L 575 290 L 590 325 Z" fill="#ff8a80" stroke="#d63031" stroke-width="1"/>
+  <path d="M 600 250 L 600 290 L 610 330 Z" fill="#ff6b6b" stroke="#d63031" stroke-width="1"/>
+  <path d="M 600 250 L 625 290 L 610 325 Z" fill="#ff8a80" stroke="#d63031" stroke-width="1"/>
+  <path d="M 600 250 L 650 300 L 635 330 Z" fill="#ff6b6b" stroke="#d63031" stroke-width="1"/>
+  
+  <!-- Butter flakes -->
+  <circle cx="570" cy="380" r="8" fill="#f4d4a0" opacity="0.7"/>
+  <circle cx="630" cy="385" r="7" fill="#f4d4a0" opacity="0.7"/>
+  
+  <!-- Text -->
+  <text x="600" y="580" font-size="48" text-anchor="middle" fill="#c9a876" font-weight="bold" font-family="Segoe UI, Arial">Torta di Mele</text>
+  <text x="600" y="620" font-size="28" text-anchor="middle" fill="#999" font-family="Segoe UI, Arial">Classica con mele a raggiera</text>
+</svg>
